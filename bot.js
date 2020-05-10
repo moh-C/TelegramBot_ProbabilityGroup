@@ -18,7 +18,10 @@ let starter = ctx => {
                     { text: String(members.fifth.num), callback_data: 'fifth' }
                 ],
                 [
-                    { text: 'بازگشت', callback_data: 'start'}
+                    { text: String(members.email.num), callback_data: 'email' }
+                ],
+                [
+                    { text: 'Submit', callback_data: 'start'}
                 ]
             ]
         }
@@ -28,7 +31,6 @@ let starter = ctx => {
 let members = {
     captain: {
         num: 'سرگروه',
-        email: 'hi@hi.com',
         current: false
     },
     second: {
@@ -46,6 +48,10 @@ let members = {
     fifth: {
         num: 'عضو 5',
         current: false
+    },
+    email: {
+        num: 'Email',
+        current: false
     }
 };
 
@@ -54,19 +60,40 @@ let actions = [
     'second',
     'third',
     'fourth',
-    'fifth'
+    'fifth',
+    'email'
 ]
+
+let infoEditor = (element, name, ctx) => {
+    members[element].num = String(name);
+    members[element].current = false;
+    starter(ctx);
+}
+
+let messageProcessor = (ctx) => {
+    let name = ctx.message.text;
+    for(let e in members) {
+        if(members[e].current) {
+            infoEditor(e, name, ctx);
+            return;
+        }
+    }
+    starter(ctx);
+}
 
 let statefinder = ctx => {
     let name = '';
     let res = ctx.match;
+    //console.log(res);
     for(let e in members) {
+        //console.log(e);
         if(e == res) {
             members[e].current = true;
             name = members[e].num; 
         } else members[e].current = false;
     }
-    bot.telegram.sendMessage(ctx.chat.id, `لطفا نام ${name} را وارد کنید: `);
+    console.log(members);
+    bot.telegram.sendMessage(ctx.chat.id, `لطفا نام ${name} را وارد/ویرایش کنید: `);
 }
 
 bot.command('start', ctx => {
@@ -83,25 +110,8 @@ bot.action(actions, ctx => {
     statefinder(ctx);
 })
 
-function infoEditor(element, name) {
-    members[element].num = String(name);
-    members[element].current = false;
-}
-
-function messageProcessor(ctx) {
-    let name = ctx.message.text;
-    for(let e in members) {
-        if(members[e].current) {
-            infoEditor(e, name);
-            return;
-        }
-    }
-    starter(ctx);
-}
-
 bot.on('message', ctx => {
     messageProcessor(ctx);
-    console.log(members);
 })
 
 bot.launch();
