@@ -1,6 +1,7 @@
+require('dotenv').config();
 const Telegraph = require('telegraf');
 
-const bot = new Telegraph('1139511873:AAFNoMjslfc0e0v9d0uhVSC_7iWoZg8ZLuQ');
+const bot = new Telegraph(process.env.TOKEN);
 let last_msg = null;
 
 let aboutMessage = `
