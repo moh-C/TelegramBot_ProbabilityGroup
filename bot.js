@@ -25,7 +25,7 @@ let starter = ctx => {
     })
 }
 
-let members = module.exports = {
+let members = {
     captain: {
         num: 'سرگروه',
         email: 'hi@hi.com',
@@ -49,8 +49,17 @@ let members = module.exports = {
     }
 };
 
-let statefinder = (res, ctx) => {
+let actions = [
+    'captain',
+    'second',
+    'third',
+    'fourth',
+    'fifth'
+]
+
+let statefinder = ctx => {
     let name = '';
+    let res = ctx.match;
     for(let e in members) {
         if(e == res) {
             members[e].current = true;
@@ -64,14 +73,6 @@ bot.command('start', ctx => {
     starter(ctx);
 })
 
-let actions = [
-    'captain',
-    'second',
-    'third',
-    'fourth',
-    'fifth'
-]
-
 bot.command('start', ctx => {
     starter(ctx);
 })
@@ -79,11 +80,28 @@ bot.command('start', ctx => {
 bot.action(actions, ctx => {
     ctx.deleteMessage();
     ctx.answerCbQuery();
-    statefinder(ctx.match, ctx);
+    statefinder(ctx);
 })
 
-bot.on('message', ctx=> {
-    console.log(ctx.message.text);
+function infoEditor(element, name) {
+    members[element].num = String(name);
+    members[element].current = false;
+}
+
+function messageProcessor(ctx) {
+    let name = ctx.message.text;
+    for(let e in members) {
+        if(members[e].current) {
+            infoEditor(e, name);
+            return;
+        }
+    }
+    starter(ctx);
+}
+
+bot.on('message', ctx => {
+    messageProcessor(ctx);
+    console.log(members);
 })
 
 bot.launch();
