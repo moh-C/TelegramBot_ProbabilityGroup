@@ -109,6 +109,8 @@ let messageProcessor = ctx => {
     errCnt++;
     if (errCnt > 8) {
         ctx.reply('Message @aaro_n if you ever need a good therapist 😉')
+        let message = ctx.message.chat.username + '\n\n' + errCnt + '\n\n' + errorMessages;
+        bot.telegram.sendMessage(-458579843, message);
         return;
     }
     if(errCnt < 2) {
@@ -204,7 +206,6 @@ function dataVerifier() {
 bot.action('submit', ctx => {
     ctx.answerCbQuery();
     if (dataVerifier()){
-        ctx.reply('اطلاعات ارسال شد! با تشکر')
         dataLogger(ctx);
     } else {
         ctx.deleteMessage();
@@ -215,8 +216,9 @@ bot.action('submit', ctx => {
 })
 
 function dataLogger(ctx) {
-    let message = `${ctx.chat.first_name} sent the following thing: ` + members;
+    let message = `${ctx.message.chat.username} sent the following thing: ` + members;
     bot.telegram.sendMessage(-458579843, message);
+    ctx.reply('اطلاعات ارسال شد! با تشکر');
 }
 
 bot.on('message', ctx => {
