@@ -1,10 +1,11 @@
 let successMessage = require('../../config').successMessage;
+let groupID = '-458579843';
 
 let dataLogger = (ctx) => {
     let message = ctx.from;
-    bot.telegram.sendMessage(-458579843, message);
-    bot.telegram.forwardMessage(-458579843, ctx.chat.id, last_msg);
-    bot.telegram.sendMessage(-458579843, members);
+    bot.telegram.sendMessage(groupID, message);
+    bot.telegram.forwardMessage(groupID, ctx.chat.id, last_msg);
+    bot.telegram.sendMessage(groupID, members);
     ctx.reply(successMessage);
 }
 

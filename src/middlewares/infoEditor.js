@@ -1,9 +1,11 @@
 let starter = require('./starter');
 
 let infoEditor = (element, name, ctx) => {
-    members[element].num = String(name);
-    members[element].current = false;
-    members[element].default = false;
+    
+    ctx.session.members[element].num = String(name);
+    ctx.session.members[element].current = false;
+    ctx.session.members[element].default = false;
+    
     starter(ctx);
 }
 

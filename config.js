@@ -63,9 +63,6 @@ let members = {
         num: 'Email',
         current: false,
         default: true
-    },
-    initialize: {
-        firstTime: true
     }
 };
 
