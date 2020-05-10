@@ -2,6 +2,10 @@ const Telegraph = require('telegraf');
 
 const bot = new Telegraph('1139511873:AAFNoMjslfc0e0v9d0uhVSC_7iWoZg8ZLuQ');
 
+let aboutMessage = `Bot developed by Aaron (@aaro_n)`;
+
+let inMain = false;
+
 let starter = ctx => {
     bot.telegram.sendMessage(ctx.chat.id, 'لطفا اطلاعات گروه خود را وارد کنید. ممنون!', {
         reply_markup: {
@@ -22,6 +26,9 @@ let starter = ctx => {
                 ],
                 [
                     { text: 'Submit', callback_data: 'submit'}
+                ],
+                [
+                    { text: 'بازگشت', callback_data: 'start'}
                 ]
             ]
         }
@@ -74,15 +81,14 @@ let infoEditor = (element, name, ctx) => {
     members[element].num = String(name);
     members[element].current = false;
     members[element].default = false;
-    console.log(members);
     starter(ctx);
 }
 
 let customMesasges = [
     'لطفا اطلاعات را صحیح وارد کنید.',
     'آدم باش🥰',
-    'Dude we could do this forever 😋😋😋😋',
-    'Bet your fingers must be hurting 😄😄'
+    'Bet your fingers must be hurting 😄😄',
+    'Dude we could do this forever 😋😋😋😋'
 ]
 
 let errCnt = 0;
@@ -92,7 +98,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
  }
 
-async function messageProcessor (ctx) {
+let messageProcessor = ctx => {
     let name = ctx.message.text;
     for(let e in members) {
         if(members[e].current) {
@@ -101,8 +107,8 @@ async function messageProcessor (ctx) {
         }
     }
     errCnt++;
-    if (errCnt > 10) {
-        
+    if (errCnt > 8) {
+        ctx.reply('Message @aaro_n if you ever need a good therapist 😉')
         return;
     }
     if(errCnt < 2) {
@@ -134,12 +140,51 @@ let statefinder = ctx => {
     bot.telegram.sendMessage(ctx.chat.id, `لطفا نام ${name} را وارد/ویرایش کنید: `);
 }
 
-bot.command('start', ctx => {
+bot.action('mainMenu', ctx => {
+    ctx.answerCbQuery('Welcome!');
+    ctx.deleteMessage();
     starter(ctx);
 })
 
 bot.command('start', ctx => {
-    starter(ctx);
+    bot.telegram.sendMessage(ctx.chat.id, `داده ها مستقیم به استاد ایمیل میشود. لطفا قبل از فرستادن آنها، از صحت کامل آنها اطمینان حاصل فرمایید.`, {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    { text: 'Menu', callback_data: 'mainMenu' },
+                    { text: 'About', callback_data: 'about' }
+                ]
+            ]
+        }
+    })
+})
+
+bot.action('start', ctx => {
+    ctx.answerCbQuery();
+    bot.telegram.sendMessage(ctx.chat.id, `داده ها مستقیم به استاد ایمیل میشود. لطفا قبل از فرستادن آنها، از صحت کامل آنها اطمینان حاصل فرمایید.`, {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    { text: 'Menu', callback_data: 'mainMenu' },
+                    { text: 'About', callback_data: 'about' }
+                ]
+            ]
+        }
+    })
+})
+
+bot.action('about', ctx => {
+    ctx.answerCbQuery('Srsly?');
+    ctx.deleteMessage();
+    bot.telegram.sendMessage(ctx.chat.id, aboutMessage, {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    { text: 'Menu', callback_data: 'mainMenu' }
+                ]
+            ]
+        }
+    })
 })
 
 bot.action(actions, ctx => {
@@ -160,7 +205,7 @@ bot.action('submit', ctx => {
     ctx.answerCbQuery();
     if (dataVerifier()){
         ctx.reply('اطلاعات ارسال شد! با تشکر')
-        bot.telegram.sendMessage(-458579843, members);
+        dataLogger(ctx);
     } else {
         ctx.deleteMessage();
         ctx.reply('حداقل یکی از فیلدها پر نشده اند.')
@@ -168,6 +213,11 @@ bot.action('submit', ctx => {
         starter(ctx);
     }
 })
+
+function dataLogger(ctx) {
+    let message = `${ctx.chat.first_name} sent the following thing: ` + members;
+    bot.telegram.sendMessage(-458579843, message);
+}
 
 bot.on('message', ctx => {
     messageProcessor(ctx);
