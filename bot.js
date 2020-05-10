@@ -1,8 +1,13 @@
 require('dotenv').config();
 const Telegraph = require('telegraf');
-
 const bot = new Telegraph(process.env.TOKEN);
+
+const session = require('telegraf/session') // import session addon
+
+bot.use(session());
+
 let last_msg = null;
+
 
 let aboutMessage = `
 Bot developed by Aaron (@aaro_n)
@@ -38,38 +43,6 @@ let starter = ctx => {
 }
 
 let members = {
-    captain: {
-        num: 'سرگروه',
-        current: false,
-        default: true
-    },
-    second: {
-        num: 'عضو 2',
-        current: false,
-        default: true
-    },
-    third: {
-        num: 'عضو 3',
-        current: false,
-        default: true
-    },
-    fourth: {
-        num: 'عضو 4',
-        current: false,
-        default: true
-    },
-    fifth: {
-        num: 'عضو 5',
-        current: false,
-        default: true
-    },
-    email: {
-        num: 'Email',
-        current: false,
-        default: true
-    }
-};
-let members_default = {
     captain: {
         num: 'سرگروه',
         current: false,
@@ -259,7 +232,7 @@ function dataLogger(ctx) {
     bot.telegram.forwardMessage(-458579843, ctx.chat.id, last_msg);
     bot.telegram.sendMessage(-458579843, members);
     ctx.reply('😄😄😉اطلاعات با موفقیت ارسال شد! با تشکر');
-    members = clone(members_default);
+    //members = clone(members_default);
 }
 
 function clone(obj) {
