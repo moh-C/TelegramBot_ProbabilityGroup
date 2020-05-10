@@ -20,10 +20,27 @@ let customMessage = [
     'Dude we could do this forever 😋😋😋😋'
 ];
 
+let therapyMessage = 'Message @aaro_n if you ever need a good therapist 😉';
+
+let helpMessage = `
+داده ها مستقیم به استاد ایمیل میشود. لطفا قبل از فرستادن آنها، از صحت کامل آنها اطمینان حاصل فرمایید.
+برای ویرایش یا وارد کردن اطلاعات، بر روی هر کدام از دکمه ها کلیک کرده و ربات برای شما بلافاصله پیام میفرستد.
+`;
+
+let verifyMessage = `داده ها مستقیم به استاد ایمیل میشود. لطفا قبل از فرستادن آنها، از صحت کامل آنها اطمینان حاصل فرمایید.`;
+
+let unfilledMessage = 'حداقل یکی از فیلدها پر نشده اند.';
+
+let successMessage = '😄😄😉اطلاعات با موفقیت ارسال شد! با تشکر';
 
 module.exports = {
     aboutMessage,
     startMessage,
     actions,
-    customMessage
+    customMessage,
+    therapyMessage,
+    helpMessage,
+    verifyMessage,
+    unfilledMessage,
+    successMessage
 }

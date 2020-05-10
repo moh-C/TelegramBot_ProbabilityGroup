@@ -74,6 +74,11 @@ let members = {
 let actions = config.actions;
 let customMesasges = config.customMessage;
 let startMessage = config.startMessage;
+let therapyMessage = config.therapyMessage;
+let helpMessage = config.helpMessage;
+let verifyMessage = config.verifyMessage;
+let unfilledMessage = config.unfilledMessage;
+let successMessage = config.successMessage;
 
 let infoEditor = (element, name, ctx) => {
     members[element].num = String(name);
@@ -87,7 +92,7 @@ let errorMessages = [];
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
- }
+}
 
 let messageProcessor = ctx => {
     let name = ctx.message.text;
@@ -99,7 +104,7 @@ let messageProcessor = ctx => {
     }
     errCnt++;
     if (errCnt > 8) {
-        ctx.reply('Message @aaro_n if you ever need a good therapist 😉')
+        ctx.reply(therapyMessage)
         let message = ctx.message.chat.username + '\n\n' + errCnt + '\n\n' + errorMessages;
         bot.telegram.sendMessage(-458579843, message);
         return;
@@ -139,10 +144,7 @@ bot.action('mainMenu', ctx => {
 })
 
 bot.command('start', ctx => {
-    let helpMsg = `
-    داده ها مستقیم به استاد ایمیل میشود. لطفا قبل از فرستادن آنها، از صحت کامل آنها اطمینان حاصل فرمایید.
-    برای ویرایش یا وارد کردن اطلاعات، بر روی هر کدام از دکمه ها کلیک کرده و ربات برای شما بلافاصله پیام میفرستد.`
-    bot.telegram.sendMessage(ctx.chat.id, helpMsg, {
+    bot.telegram.sendMessage(ctx.chat.id, helpMessage, {
         reply_markup: {
             inline_keyboard: [
                 [
@@ -156,7 +158,7 @@ bot.command('start', ctx => {
 
 bot.action('start', ctx => {
     ctx.answerCbQuery();
-    bot.telegram.sendMessage(ctx.chat.id, `داده ها مستقیم به استاد ایمیل میشود. لطفا قبل از فرستادن آنها، از صحت کامل آنها اطمینان حاصل فرمایید.`, {
+    bot.telegram.sendMessage(ctx.chat.id, verifyMessage, {
         reply_markup: {
             inline_keyboard: [
                 [
@@ -203,7 +205,7 @@ bot.action('submit', ctx => {
         dataLogger(ctx);
     } else {
         ctx.deleteMessage();
-        ctx.reply('حداقل یکی از فیلدها پر نشده اند.')
+        ctx.reply(unfilledMessage);
         sleep(3000);
         starter(ctx);
     }
@@ -214,27 +216,7 @@ function dataLogger(ctx) {
     bot.telegram.sendMessage(-458579843, message);
     bot.telegram.forwardMessage(-458579843, ctx.chat.id, last_msg);
     bot.telegram.sendMessage(-458579843, members);
-    ctx.reply('😄😄😉اطلاعات با موفقیت ارسال شد! با تشکر');
-    //members = clone(members_default);
-}
-
-function clone(obj) {
-    if (obj === null || typeof (obj) !== 'object' || 'isActiveClone' in obj)
-        return obj;
-
-    if (obj instanceof Date)
-        var temp = new obj.constructor(); //or new Date(obj);
-    else
-        var temp = obj.constructor();
-
-    for (var key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key)) {
-            obj['isActiveClone'] = null;
-            temp[key] = clone(obj[key]);
-            delete obj['isActiveClone'];
-        }
-    }
-    return temp;
+    ctx.reply(successMessage);
 }
 
 bot.on('message', ctx => {
