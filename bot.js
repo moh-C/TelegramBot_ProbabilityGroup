@@ -21,7 +21,7 @@ let starter = ctx => {
                     { text: String(members.email.num), callback_data: 'email' }
                 ],
                 [
-                    { text: 'Submit', callback_data: 'start'}
+                    { text: 'Submit', callback_data: 'sumbit'}
                 ]
             ]
         }
@@ -70,7 +70,21 @@ let infoEditor = (element, name, ctx) => {
     starter(ctx);
 }
 
-let messageProcessor = (ctx) => {
+let customMesasges = [
+    'لطفا اطلاعات را صحیح وارد کنید.',
+    'آدم باش',
+    'Dude we could do this forever.',
+    'I bet your fingers must be hurting 😄😄'
+]
+
+let errCnt = 0;
+let errorMessages = [];
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+ }
+
+async function messageProcessor (ctx) {
     let name = ctx.message.text;
     for(let e in members) {
         if(members[e].current) {
@@ -78,6 +92,21 @@ let messageProcessor = (ctx) => {
             return;
         }
     }
+    errCnt++;
+    if(errCnt < 2) {
+        ctx.reply(customMesasges[0]);
+    }
+    else if(errCnt < 4) {
+        ctx.reply(customMesasges[1]);
+    }
+    else if(errCnt < 5) {
+        ctx.reply(customMesasges[2]);
+    }
+    else {
+        ctx.reply(customMesasges[3]);
+    }
+    errorMessages.push(name);
+    await sleep(3000);
     starter(ctx);
 }
 
@@ -108,6 +137,10 @@ bot.action(actions, ctx => {
     ctx.deleteMessage();
     ctx.answerCbQuery();
     statefinder(ctx);
+})
+
+bot.action('submit', ctx => {
+    //bot.telegram()
 })
 
 bot.on('message', ctx => {
