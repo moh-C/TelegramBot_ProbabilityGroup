@@ -1,5 +1,6 @@
 require('dotenv').config();
 const Telegraph = require('telegraf');
+const config = require('./config');
 const bot = new Telegraph(process.env.TOKEN);
 
 const session = require('telegraf/session') // import session addon
@@ -8,13 +9,8 @@ bot.use(session());
 
 let last_msg = null;
 
-
-let aboutMessage = `
-Bot developed by Aaron (@aaro_n)
-The speed might vary due to VPN's virtual endpoint. us-east-2 aws is the best regional location, thus the best speed.`;
-
 let starter = ctx => {
-    bot.telegram.sendMessage(ctx.chat.id, 'لطفا اطلاعات گروه خود را وارد کنید. ممنون!', {
+    bot.telegram.sendMessage(ctx.chat.id, startMessage, {
         reply_markup: {
             inline_keyboard: [
                 [
@@ -75,14 +71,9 @@ let members = {
     }
 };
 
-let actions = [
-    'captain',
-    'second',
-    'third',
-    'fourth',
-    'fifth',
-    'email'
-]
+let actions = config.actions;
+let customMesasges = config.customMessage;
+let startMessage = config.startMessage;
 
 let infoEditor = (element, name, ctx) => {
     members[element].num = String(name);
@@ -90,13 +81,6 @@ let infoEditor = (element, name, ctx) => {
     members[element].default = false;
     starter(ctx);
 }
-
-let customMesasges = [
-    'لطفا اطلاعات را صحیح وارد کنید.',
-    'آدم باش🥰',
-    'Bet your fingers must be hurting 😄😄',
-    'Dude we could do this forever 😋😋😋😋'
-]
 
 let errCnt = 0;
 let errorMessages = [];
@@ -132,7 +116,6 @@ let messageProcessor = ctx => {
     else {
         ctx.reply(customMesasges[3]);
     }
-    //await sleep(3000);
     starter(ctx);
     errorMessages.push(name);
 }
