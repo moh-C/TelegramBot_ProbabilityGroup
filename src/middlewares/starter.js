@@ -1,6 +1,8 @@
 let startMessage = require('../../config').startMessage;
 
 let starter = ctx => {
+    let members = ctx.session.members;
+    
     bot.telegram.sendMessage(ctx.chat.id, startMessage, {
         reply_markup: {
             inline_keyboard: [

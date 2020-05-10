@@ -15,5 +15,7 @@ module.exports = bot => {
                 ]
             }
         })
+        ctx.session.firstTime = true;
+        console.log(ctx.session);
     })
 }

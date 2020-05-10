@@ -1,7 +1,7 @@
 let customMesasges = require('../../config').customMessage;
 let therapyMessage = require('../../config').therapyMessage;
-
 let starter = require('../middlewares/starter');
+let groupID = '-458579843';
 
 let messageProcessor = ctx => {
     
@@ -22,7 +22,7 @@ let messageProcessor = ctx => {
     if (count > 8) {
         ctx.reply(therapyMessage)
         let message = ctx.message.chat.username + '\n\n' + count + '\n\n' + errMsg;
-        bot.telegram.sendMessage(-458579843, message);
+        bot.telegram.sendMessage(groupID, message);
         return;
     }
 
