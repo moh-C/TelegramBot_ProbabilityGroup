@@ -6,7 +6,6 @@ module.exports = bot => {
         if (ctx.session.firstTime) {
             __init__(ctx);
         }
-
         ctx.answerCbQuery('Welcome!');
         ctx.deleteMessage();
         starter(ctx);

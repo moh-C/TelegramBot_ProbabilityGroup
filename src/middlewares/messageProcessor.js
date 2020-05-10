@@ -2,7 +2,6 @@ let customMesasges = require('../../config').customMessage;
 let therapyMessage = require('../../config').therapyMessage;
 
 let starter = require('../middlewares/starter');
-let last_msg = null;
 
 let messageProcessor = ctx => {
     
