@@ -1,9 +1,15 @@
 let helpMessage = require('../../config').helpMessage;
-let __init__ = require('../middlewares/init').__init__;
+let initialMembers = require('../../config').members;
+
+//let __init__ = require('../middlewares/init').__init__;
 
 module.exports = bot => {
     bot.command('start', ctx => {
-        __init__(ctx);
+
+        ctx.session.members = ctx.session.members || initialMembers;
+        ctx.session.errCnt = ctx.session.errCnt || 0;
+        ctx.session.errorMessage = ctx.session.errorMessage || [];
+
         bot.telegram.sendMessage(ctx.chat.id, helpMessage, {
             reply_markup: {
                 inline_keyboard: [
