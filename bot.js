@@ -1,10 +1,11 @@
 const Telegraph = require('telegraf');
 
 const bot = new Telegraph('1139511873:AAFNoMjslfc0e0v9d0uhVSC_7iWoZg8ZLuQ');
+let last_msg = null;
 
-let aboutMessage = `Bot developed by Aaron (@aaro_n)`;
-
-let inMain = false;
+let aboutMessage = `
+Bot developed by Aaron (@aaro_n)
+The speed might vary due to VPN's virtual endpoint. us-east-2 aws is the best regional location, thus the best speed.`;
 
 let starter = ctx => {
     bot.telegram.sendMessage(ctx.chat.id, 'لطفا اطلاعات گروه خود را وارد کنید. ممنون!', {
@@ -36,6 +37,38 @@ let starter = ctx => {
 }
 
 let members = {
+    captain: {
+        num: 'سرگروه',
+        current: false,
+        default: true
+    },
+    second: {
+        num: 'عضو 2',
+        current: false,
+        default: true
+    },
+    third: {
+        num: 'عضو 3',
+        current: false,
+        default: true
+    },
+    fourth: {
+        num: 'عضو 4',
+        current: false,
+        default: true
+    },
+    fifth: {
+        num: 'عضو 5',
+        current: false,
+        default: true
+    },
+    email: {
+        num: 'Email',
+        current: false,
+        default: true
+    }
+};
+let members_default = {
     captain: {
         num: 'سرگروه',
         current: false,
@@ -149,7 +182,10 @@ bot.action('mainMenu', ctx => {
 })
 
 bot.command('start', ctx => {
-    bot.telegram.sendMessage(ctx.chat.id, `داده ها مستقیم به استاد ایمیل میشود. لطفا قبل از فرستادن آنها، از صحت کامل آنها اطمینان حاصل فرمایید.`, {
+    let helpMsg = `
+    داده ها مستقیم به استاد ایمیل میشود. لطفا قبل از فرستادن آنها، از صحت کامل آنها اطمینان حاصل فرمایید.
+    برای ویرایش یا وارد کردن اطلاعات، بر روی هر کدام از دکمه ها کلیک کرده و ربات برای شما بلافاصله پیام میفرستد.`
+    bot.telegram.sendMessage(ctx.chat.id, helpMsg, {
         reply_markup: {
             inline_keyboard: [
                 [
@@ -176,13 +212,13 @@ bot.action('start', ctx => {
 })
 
 bot.action('about', ctx => {
-    ctx.answerCbQuery('Srsly?');
+    ctx.answerCbQuery();
     ctx.deleteMessage();
     bot.telegram.sendMessage(ctx.chat.id, aboutMessage, {
         reply_markup: {
             inline_keyboard: [
                 [
-                    { text: 'Menu', callback_data: 'mainMenu' }
+                    { text: 'Menu', callback_data: 'start' }
                 ]
             ]
         }
@@ -205,6 +241,7 @@ function dataVerifier() {
 
 bot.action('submit', ctx => {
     ctx.answerCbQuery();
+    //dataLogger(ctx);
     if (dataVerifier()){
         dataLogger(ctx);
     } else {
@@ -216,13 +253,36 @@ bot.action('submit', ctx => {
 })
 
 function dataLogger(ctx) {
-    let message = `${ctx.message.chat.username} sent the following thing: ` + members;
+    let message = ctx.from;
     bot.telegram.sendMessage(-458579843, message);
-    ctx.reply('اطلاعات ارسال شد! با تشکر');
+    bot.telegram.forwardMessage(-458579843, ctx.chat.id, last_msg);
+    bot.telegram.sendMessage(-458579843, members);
+    ctx.reply('😄😄😉اطلاعات با موفقیت ارسال شد! با تشکر');
+    members = clone(members_default);
+}
+
+function clone(obj) {
+    if (obj === null || typeof (obj) !== 'object' || 'isActiveClone' in obj)
+        return obj;
+
+    if (obj instanceof Date)
+        var temp = new obj.constructor(); //or new Date(obj);
+    else
+        var temp = obj.constructor();
+
+    for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            obj['isActiveClone'] = null;
+            temp[key] = clone(obj[key]);
+            delete obj['isActiveClone'];
+        }
+    }
+    return temp;
 }
 
 bot.on('message', ctx => {
     messageProcessor(ctx);
+    last_msg = ctx.message.message_id;
 })
 
 bot.launch();
