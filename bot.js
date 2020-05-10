@@ -8,11 +8,8 @@ const bot = new Telegraph(process.env.TOKEN);
 
 bot.use(session());
 
-let actions = config.actions;
 let customMesasges = config.customMessage;
 let therapyMessage = config.therapyMessage;
-let unfilledMessage = config.unfilledMessage;
-let successMessage = config.successMessage;
 
 /* ****************************************************************************************************************************** */
 
@@ -59,66 +56,6 @@ let messageProcessor = ctx => {
     errorMessages.push(name);
 }
 
-let statefinder = ctx => {
-    let name = '';
-    let res = ctx.match;
-    for(let e in members) {
-        if(e == res) {
-            members[e].current = true;
-            name = members[e].num; 
-        } else members[e].current = false;
-    }
-    bot.telegram.sendMessage(ctx.chat.id, `لطفا نام ${name} را وارد/ویرایش کنید: `);
-}
-
-bot.action('about', ctx => {
-    ctx.answerCbQuery();
-    ctx.deleteMessage();
-    bot.telegram.sendMessage(ctx.chat.id, aboutMessage, {
-        reply_markup: {
-            inline_keyboard: [
-                [
-                    { text: 'Menu', callback_data: 'start' }
-                ]
-            ]
-        }
-    })
-})
-
-bot.action(actions, ctx => {
-    ctx.deleteMessage();
-    ctx.answerCbQuery();
-    statefinder(ctx);
-})
-
-function dataVerifier() {
-    for(let e in members) {
-        if(members[e].default)
-            return false;
-    }
-    return true;
-}
-
-bot.action('submit', ctx => {
-    ctx.answerCbQuery();
-    //dataLogger(ctx);
-    if (dataVerifier()){
-        dataLogger(ctx);
-    } else {
-        ctx.deleteMessage();
-        ctx.reply(unfilledMessage);
-        sleep(3000);
-        starter(ctx);
-    }
-})
-
-function dataLogger(ctx) {
-    let message = ctx.from;
-    bot.telegram.sendMessage(-458579843, message);
-    bot.telegram.forwardMessage(-458579843, ctx.chat.id, last_msg);
-    bot.telegram.sendMessage(-458579843, members);
-    ctx.reply(successMessage);
-}
 
 bot.on('message', ctx => {
     messageProcessor(ctx);
