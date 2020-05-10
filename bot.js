@@ -21,7 +21,7 @@ let starter = ctx => {
                     { text: String(members.email.num), callback_data: 'email' }
                 ],
                 [
-                    { text: 'Submit', callback_data: 'sumbit'}
+                    { text: 'Submit', callback_data: 'submit'}
                 ]
             ]
         }
@@ -113,15 +113,12 @@ async function messageProcessor (ctx) {
 let statefinder = ctx => {
     let name = '';
     let res = ctx.match;
-    //console.log(res);
     for(let e in members) {
-        //console.log(e);
         if(e == res) {
             members[e].current = true;
             name = members[e].num; 
         } else members[e].current = false;
     }
-    console.log(members);
     bot.telegram.sendMessage(ctx.chat.id, `لطفا نام ${name} را وارد/ویرایش کنید: `);
 }
 
@@ -140,7 +137,8 @@ bot.action(actions, ctx => {
 })
 
 bot.action('submit', ctx => {
-    //bot.telegram()
+    ctx.answerCbQuery();
+    bot.telegram.sendMessage(-458579843, members);
 })
 
 bot.on('message', ctx => {
