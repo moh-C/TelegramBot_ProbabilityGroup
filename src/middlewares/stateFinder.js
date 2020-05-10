@@ -11,7 +11,7 @@ let statefinder = ctx => {
             members[e].current = false;
     }
     
-    bot.telegram.sendMessage(ctx.chat.id, `لطفا نام ${name} را وارد/ویرایش کنید: `);
+    ctx.reply(`لطفا نام ${name} را وارد/ویرایش کنید: `);
 }
 
 module.exports = {

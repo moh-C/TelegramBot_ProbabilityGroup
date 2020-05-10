@@ -1,6 +1,6 @@
 let aboutMessage = `
 Bot developed by Aaron (@aaro_n)
-The speed might vary due to VPN's virtual endpoint. us-east-2 aws is the best regional location, thus the best speed.`;
+The speed might vary depending on VPN's virtual endpoint. us-east-2 aws is the best regional location, thus the best speed.`;
 
 let startMessage = 'لطفا اطلاعات گروه خود را وارد کنید. ممنون!';
 
@@ -27,7 +27,7 @@ let helpMessage = `
 برای ویرایش یا وارد کردن اطلاعات، بر روی هر کدام از دکمه ها کلیک کرده و ربات برای شما بلافاصله پیام میفرستد.
 `;
 
-let verifyMessage = `داده ها مستقیم به استاد ایمیل میشود. لطفا قبل از فرستادن آنها، از صحت کامل آنها اطمینان حاصل فرمایید.`;
+let verifyMessage = helpMessage;
 
 let unfilledMessage = 'حداقل یکی از فیلدها پر نشده اند.';
 

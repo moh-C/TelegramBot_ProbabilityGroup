@@ -1,10 +1,9 @@
 let helpMessage = require('../../config').helpMessage;
+let __init__ = require('../middlewares/init').__init__;
 
 module.exports = bot => {
     bot.command('start', ctx => {
-        
-        ctx.session.firstTime = true;
-
+        __init__(ctx);
         bot.telegram.sendMessage(ctx.chat.id, helpMessage, {
             reply_markup: {
                 inline_keyboard: [
@@ -15,7 +14,5 @@ module.exports = bot => {
                 ]
             }
         })
-        ctx.session.firstTime = true;
-        console.log(ctx.session);
     })
 }

@@ -1,12 +1,11 @@
 let customMesasges = require('../../config').customMessage;
 let therapyMessage = require('../../config').therapyMessage;
-let starter = require('../middlewares/starter');
-let groupID = '-458579843';
+let starter = require('../middlewares/starter').starter;
+let infoEditor = require('./infoEditor').infoEditor;
 
-let messageProcessor = ctx => {
+module.exports.messageProcessor = ctx => {
     
     let name = ctx.message.text;
-    let count = ctx.session.errCnt;
     let errMsg = ctx.session.errorMessage;
     let members = ctx.session.members;
 
@@ -17,20 +16,18 @@ let messageProcessor = ctx => {
         }
     }
     
-    count++;
+    ctx.session.errCnt++;
 
-    if (count > 8) {
+    if (ctx.session.errCnt > 8) {
         ctx.reply(therapyMessage)
-        let message = ctx.message.chat.username + '\n\n' + count + '\n\n' + errMsg;
-        bot.telegram.sendMessage(groupID, message);
         return;
     }
 
-    if(count < 2) {
+    if(ctx.session.errCnt < 2) {
         ctx.reply(customMesasges[0]);
-    } else if(count < 3) {
+    } else if(ctx.session.errCnt < 3) {
         ctx.reply(customMesasges[1]);
-    } else if(count < 4) {
+    } else if(ctx.session.errCnt < 4) {
         ctx.reply(customMesasges[2]);
     } else {
         ctx.reply(customMesasges[3]);
@@ -38,8 +35,4 @@ let messageProcessor = ctx => {
 
     starter(ctx);
     errMsg.push(name);
-}
-
-module.exports = {
-    messageProcessor
 }

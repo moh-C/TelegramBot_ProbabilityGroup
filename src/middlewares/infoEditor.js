@@ -1,4 +1,4 @@
-let starter = require('./starter');
+let starter = require('./starter').starter;
 
 let infoEditor = (element, name, ctx) => {
     
