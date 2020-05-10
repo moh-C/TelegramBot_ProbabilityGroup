@@ -33,6 +33,42 @@ let unfilledMessage = 'حداقل یکی از فیلدها پر نشده اند.
 
 let successMessage = '😄😄😉اطلاعات با موفقیت ارسال شد! با تشکر';
 
+let members = {
+    captain: {
+        num: 'سرگروه',
+        current: false,
+        default: true
+    },
+    second: {
+        num: 'عضو 2',
+        current: false,
+        default: true
+    },
+    third: {
+        num: 'عضو 3',
+        current: false,
+        default: true
+    },
+    fourth: {
+        num: 'عضو 4',
+        current: false,
+        default: true
+    },
+    fifth: {
+        num: 'عضو 5',
+        current: false,
+        default: true
+    },
+    email: {
+        num: 'Email',
+        current: false,
+        default: true
+    },
+    initialize: {
+        firstTime: true
+    }
+};
+
 module.exports = {
     aboutMessage,
     startMessage,
@@ -42,5 +78,6 @@ module.exports = {
     helpMessage,
     verifyMessage,
     unfilledMessage,
-    successMessage
+    successMessage,
+    members
 }
