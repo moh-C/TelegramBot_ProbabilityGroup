@@ -6,7 +6,6 @@ let infoEditor = require('./infoEditor').infoEditor;
 module.exports.messageProcessor = ctx => {
     
     let name = ctx.message.text;
-    let errMsg = ctx.session.errorMessage;
     let members = ctx.session.members;
 
     for(let e in members) {
@@ -34,5 +33,5 @@ module.exports.messageProcessor = ctx => {
     }
 
     starter(ctx);
-    errMsg.push(name);
+    //ctx.session.errorMessage.push(name);
 }

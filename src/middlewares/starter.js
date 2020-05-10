@@ -1,9 +1,13 @@
 let startMessage = require('../../config').startMessage;
+let extraMember = require('../../config').members;
 
 module.exports.starter = ctx => {
     let members = ctx.session.members;
-    
-    ctx.reply(startMessage, {
+    console.log(ctx.session);
+
+    //let capNum = ctx.session.members.captain.num || extraMember.captain.num;
+
+    ctx.reply(ctx.chat.id, startMessage, {
         reply_markup: {
             inline_keyboard: [
                 [
